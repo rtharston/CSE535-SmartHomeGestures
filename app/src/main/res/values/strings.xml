@@ -4,6 +4,8 @@
     <!-- Strings used for fragments for navigation -->
     <string name="gesture_select_label">Gesture Selection</string>
     <string name="expert_example_label">Expert Example</string>
+    <string name="record_gesture_label">Record Gesture</string>
     <string name="see_example">See Example</string>
     <string name="practice">Practice</string>
+    <string name="record_gesture">Record</string>
 </resources>

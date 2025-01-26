@@ -22,7 +22,13 @@
         tools:layout="@layout/fragment_expert_example">
 
         <action
-            android:id="@+id/action_ExpertExampleFragment_to_GestureSelectFragment"
-            app:destination="@id/GestureSelectFragment" />
+            android:id="@+id/action_ExpertExampleFragment_to_RecordFragment"
+            app:destination="@id/RecordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/RecordFragment"
+        android:name="com.example.smarthomegestures.RecordGestureFragment"
+        android:label="@string/record_gesture_label"
+        tools:layout="@layout/fragment_expert_example">
     </fragment>
 </navigation>

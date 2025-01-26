@@ -1,19 +1,19 @@
 package com.example.smarthomegestures;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.smarthomegestures.databinding.FragmentExpertExampleBinding;
+import com.example.smarthomegestures.databinding.FragmentRecordGestureBinding;
 
-public class ExpertExampleFragment extends Fragment {
+public class RecordGestureFragment extends Fragment {
 
-    private FragmentExpertExampleBinding binding;
+    private FragmentRecordGestureBinding binding;
 
     @Override
     public View onCreateView(
@@ -21,7 +21,7 @@ public class ExpertExampleFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentExpertExampleBinding.inflate(inflater, container, false);
+        binding = FragmentRecordGestureBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -29,10 +29,10 @@ public class ExpertExampleFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonPractice.setOnClickListener(v ->
-                NavHostFragment.findNavController(ExpertExampleFragment.this)
-                        .navigate(R.id.action_ExpertExampleFragment_to_RecordFragment)
-        );
+         binding.buttonRecordGesture.setOnClickListener(v ->
+             Log.d("buttonRecordGesture", "Record gesture")
+            // TODO: save recording
+         );
     }
 
     @Override
