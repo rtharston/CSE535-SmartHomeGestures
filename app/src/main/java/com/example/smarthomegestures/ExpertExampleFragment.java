@@ -9,11 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.smarthomegestures.databinding.FragmentFirstBinding;
+import com.example.smarthomegestures.databinding.FragmentExpertExampleBinding;
 
-public class FirstFragment extends Fragment {
+public class ExpertExampleFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentExpertExampleBinding binding;
 
     @Override
     public View onCreateView(
@@ -21,7 +21,7 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentExpertExampleBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -29,9 +29,9 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonFirst.setOnClickListener(v ->
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment)
+        binding.buttonPractice.setOnClickListener(v ->
+                NavHostFragment.findNavController(ExpertExampleFragment.this)
+                        .navigate(R.id.action_ExpertExampleFragment_to_GestureSelectFragment)
         );
     }
 
