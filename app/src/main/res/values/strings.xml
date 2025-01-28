@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">SmartHomeGestures</string>
-    <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="gesture_select_label">Gesture Selection</string>
     <string name="expert_example_label">Expert Example</string>
