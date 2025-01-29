@@ -7,24 +7,4 @@
     <string name="see_example">See Example</string>
     <string name="practice">Practice</string>
     <string name="record_gesture">Record</string>
-
-    <string-array name="gestures_array">
-        <item>Turn on lights</item>
-        <item>Turn off lights</item>
-        <item>Turn on fan</item>
-        <item>Turn off fan</item>
-        <item>Increase fan speed</item>
-        <item>Decrease fan speed</item>
-        <item>Set Thermostat to specified temperature</item>
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-    </string-array>
 </resources>
