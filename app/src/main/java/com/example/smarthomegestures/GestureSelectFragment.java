@@ -10,6 +10,9 @@ import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.smarthomegestures.databinding.FragmentGestureSelectBinding;
@@ -18,40 +21,8 @@ import java.util.Optional;
 
 public class GestureSelectFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    enum GestureOption {
-        turn_on_lights("Turn on lights"),
-        turn_off_lights("Turn off lights"),
-        turn_on_fan("Turn on fan"),
-        turn_off_fan("Turn off fan"),
-        increase_fan_speed("Increase fan speed"),
-        decrease_fan_speed("Decrease fan speed"),
-        set_thermostat_to_specified_temperature("Set Thermostat to specified temperature"),
-        _0("0"),
-        _1("1"),
-        _2("2"),
-        _3("3"),
-        _4("4"),
-        _5("5"),
-        _6("6"),
-        _7("7"),
-        _8("8"),
-        _9("9");
-        
-        private final String name;
-
-        private GestureOption(String name){
-            this.name = name;
-        }
-
-        @NonNull
-        @Override public String toString(){
-            return name;
-        }
-    }
-
     private FragmentGestureSelectBinding binding;
-
-    private Optional<GestureOption> selection;
+    private GestureSelectionViewModel viewModel;
 
     @Override
     public View onCreateView(
@@ -79,10 +50,13 @@ public class GestureSelectFragment extends Fragment implements AdapterView.OnIte
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        NavController navController = NavHostFragment.findNavController(GestureSelectFragment.this);
+        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.GestureSelectFragment);
+
+        viewModel = new ViewModelProvider(backStackEntry).get(GestureSelectionViewModel.class);
 
         binding.buttonSelect.setOnClickListener(v ->
-                NavHostFragment.findNavController(GestureSelectFragment.this)
-                        .navigate(R.id.action_GestureSelectFragment_to_ExpertExampleFragment)
+                navController.navigate(R.id.action_GestureSelectFragment_to_ExpertExampleFragment)
         );
     }
 
@@ -96,12 +70,12 @@ public class GestureSelectFragment extends Fragment implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         GestureOption gesture = (GestureOption)parent.getItemAtPosition(position);
         Log.d("gestureSelect", gesture.toString());
-        selection = Optional.of(gesture);
+        viewModel.selectGestureOption(gesture);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        selection = Optional.empty();
+        viewModel.clearGestureOption();
     }
 
 }

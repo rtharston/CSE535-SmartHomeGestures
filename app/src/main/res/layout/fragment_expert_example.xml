@@ -20,6 +20,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gestureName" />
+
+        <TextView
+            android:id="@+id/gestureName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selected Gesture"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/button_practice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
