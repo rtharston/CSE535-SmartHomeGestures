@@ -34,12 +34,10 @@ public class ExpertExampleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = NavHostFragment.findNavController(ExpertExampleFragment.this);
 
-        final TextView helloTextView = getView().findViewById(R.id.gestureName);
-
         viewModel = new ViewModelProvider(requireActivity()).get(GestureSelectionViewModel.class);
         viewModel.getSelectedGestureOption().observe(getViewLifecycleOwner(), selectedGesture -> {
             // TODO: get the correct video for this gesture
-            selectedGesture.ifPresent(gestureOption -> helloTextView.setText(gestureOption.toString()));
+            selectedGesture.ifPresent(gestureOption -> binding.gestureName.setText(gestureOption.toString()));
         });
 
         binding.buttonPractice.setOnClickListener(v ->
