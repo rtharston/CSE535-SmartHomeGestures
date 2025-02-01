@@ -38,6 +38,8 @@ public class GestureSelectFragment extends Fragment implements AdapterView.OnIte
         // Apply the adapter to the drop down menu.
         binding.gestureSelectText.setAdapter(gestureSelectAdapter);
         binding.gestureSelectText.setOnItemClickListener(this);
+        // Disable the button until a gesture is selected
+        binding.buttonSelect.setEnabled(false);
 
         return binding.getRoot();
 
@@ -57,6 +59,9 @@ public class GestureSelectFragment extends Fragment implements AdapterView.OnIte
             if (selectedGesture.isEmpty())
             {
                 binding.gestureSelectText.setText("");
+                binding.buttonSelect.setEnabled(false);
+            } else {
+                binding.buttonSelect.setEnabled(true);
             }
         });
     }
