@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -47,13 +46,19 @@ public class GestureSelectFragment extends Fragment implements AdapterView.OnIte
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = NavHostFragment.findNavController(GestureSelectFragment.this);
-        NavBackStackEntry backStackEntry = navController.getBackStackEntry(R.id.GestureSelectFragment);
 
-        viewModel = new ViewModelProvider(backStackEntry).get(GestureSelectionViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(GestureSelectionViewModel.class);
 
         binding.buttonSelect.setOnClickListener(v ->
                 navController.navigate(R.id.action_GestureSelectFragment_to_ExpertExampleFragment)
         );
+
+        viewModel.getSelectedGestureOption().observe(getViewLifecycleOwner(), selectedGesture -> {
+            if (selectedGesture.isEmpty())
+            {
+                binding.gestureSelectText.setText("");
+            }
+        });
     }
 
     @Override
