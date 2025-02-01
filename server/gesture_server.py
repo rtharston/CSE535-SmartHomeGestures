@@ -44,9 +44,22 @@ def index():
 
 
 @app.get('/example/<gesture>')
-def get_video(gesture):
+def get_example_video(gesture):
     validate_gesture(gesture)
     return send_file(os.path.join(app.config["EXAMPLES_FOLDER"], f'{gesture}_example.mp4'))
+
+
+@app.get('/review/<gesture>')
+def get_uploaded_video(gesture):
+    validate_gesture(gesture)
+    # TODO: add a endpoint to get the number of copies of this video so the user can pick one
+    # TODO: first though just figure out which was the latest and return that one instead of the first
+    num = 0
+    p = os.path.join(app.config["UPLOADS_FOLDER"], f'{gesture}_user_{num}.mp4')
+    if os.path.exists(p):
+        return send_file(p)
+    else:
+        return f'no uploads of {gesture} found', 404
 
 
 @app.post('/upload/<gesture>')
