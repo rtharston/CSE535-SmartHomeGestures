@@ -6,6 +6,7 @@
     <string name="expert_example_label">Expert Example</string>
     <string name="record_gesture_label">Record Gesture</string>
     <string name="see_example">See Example</string>
+    <string name="replay">Replay</string>
     <string name="practice">Practice</string>
     <string name="record_gesture">Record</string>
 </resources>

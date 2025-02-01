@@ -29,6 +29,7 @@ public class ExpertExampleFragment extends Fragment {
     ) {
 
         binding = FragmentExpertExampleBinding.inflate(inflater, container, false);
+        binding.buttonReplay.setEnabled(false);
         return binding.getRoot();
 
     }
@@ -38,14 +39,20 @@ public class ExpertExampleFragment extends Fragment {
         NavController navController = NavHostFragment.findNavController(ExpertExampleFragment.this);
 
         viewModel = new ViewModelProvider(requireActivity()).get(GestureSelectionViewModel.class);
-        viewModel.getSelectedGestureOption().observe(getViewLifecycleOwner(), selectedGesture -> selectedGesture.ifPresent(gestureOption -> {
-            binding.gestureName.setText(gestureOption.toString());
+        viewModel.getSelectedGestureOption().observe(getViewLifecycleOwner(), selectedGesture -> {
+            selectedGesture.ifPresent(gestureOption -> {
+                binding.gestureName.setText(gestureOption.toString());
+                playVideoFor(selectedGesture.get());
+            });
+            binding.buttonReplay.setEnabled(selectedGesture.isPresent());
+        });
 
-            playVideoFor(selectedGesture.get());
-        }));
+        binding.buttonReplay.setOnClickListener(v ->
+            viewModel.getSelectedGestureOption().getValue().ifPresent(this::playVideoFor)
+        );
 
         binding.buttonPractice.setOnClickListener(v ->
-                navController.navigate(R.id.action_ExpertExampleFragment_to_RecordFragment)
+            navController.navigate(R.id.action_ExpertExampleFragment_to_RecordFragment)
         );
     }
 
