@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.0"
+camerax = "1.4.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -10,6 +11,12 @@ navigationFragment = "2.8.6"
 navigationUi = "2.8.6"
 
 [libraries]
+camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax"}
+camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax"}
+camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax"}
+camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "camerax"}
+camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax"}
+camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax"}
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
