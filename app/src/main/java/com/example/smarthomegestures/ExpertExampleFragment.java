@@ -1,10 +1,13 @@
 package com.example.smarthomegestures;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -35,10 +38,11 @@ public class ExpertExampleFragment extends Fragment {
         NavController navController = NavHostFragment.findNavController(ExpertExampleFragment.this);
 
         viewModel = new ViewModelProvider(requireActivity()).get(GestureSelectionViewModel.class);
-        viewModel.getSelectedGestureOption().observe(getViewLifecycleOwner(), selectedGesture -> {
-            // TODO: get the correct video for this gesture
-            selectedGesture.ifPresent(gestureOption -> binding.gestureName.setText(gestureOption.toString()));
-        });
+        viewModel.getSelectedGestureOption().observe(getViewLifecycleOwner(), selectedGesture -> selectedGesture.ifPresent(gestureOption -> {
+            binding.gestureName.setText(gestureOption.toString());
+
+            playVideoFor(selectedGesture.get());
+        }));
 
         binding.buttonPractice.setOnClickListener(v ->
                 navController.navigate(R.id.action_ExpertExampleFragment_to_RecordFragment)
@@ -51,4 +55,11 @@ public class ExpertExampleFragment extends Fragment {
         binding = null;
     }
 
+    private void playVideoFor(GestureOption gesture) {
+        Uri uri = Uri.parse("android.resource://"+getActivity().getPackageName()+"/"+gesture.gestureExampleVideo());
+
+        binding.gestureVideoView.setVideoURI(uri);
+        binding.gestureVideoView.start();
+        Log.d("videoStart", "Started video from " + uri.getPath());
+    }
 }

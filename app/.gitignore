@@ -1,1 +1,3 @@
 /build
+# the videos are required for the build, but I don't want to put them in git
+*.mp4

@@ -32,4 +32,47 @@ public enum GestureOption {
     @Override public String toString(){
         return name;
     }
+
+    public int gestureExampleVideo()
+    {
+        switch (this) {
+            case turn_on_lights:
+                return R.raw.example_light_on;
+            case turn_off_lights:
+                return R.raw.example_light_off;
+            case turn_on_fan:
+                return R.raw.example_fan_on;
+            case turn_off_fan:
+                return R.raw.example_fan_off;
+            case increase_fan_speed:
+                return R.raw.example_increase_fan_speed;
+            case decrease_fan_speed:
+                return R.raw.example_decrease_fan_speed;
+            case set_thermostat_to_specified_temperature:
+                return R.raw.example_set_thermo;
+            case _0:
+                return R.raw.example_0;
+            case _1:
+                return R.raw.example_1;
+            case _2:
+                return R.raw.example_2;
+            case _3:
+                return R.raw.example_3;
+            case _4:
+                return R.raw.example_4;
+            case _5:
+                return R.raw.example_5;
+            case _6:
+                return R.raw.example_6;
+            case _7:
+                return R.raw.example_7;
+            case _8:
+                return R.raw.example_8;
+            case _9:
+                return R.raw.example_9;
+            default:
+//                throw new RuntimeException("Can't touch this.");
+                return R.raw.example_0;
+        }
+    }
 }
