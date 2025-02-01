@@ -76,28 +76,31 @@ public enum GestureOption {
         }
     }
 
-    public String videoName()
+    public String gestureEndpoint()
     {
-        String baseName;
         switch (this) {
             case turn_on_lights:
-                baseName = "LightOn";
+                return "LightOn";
             case turn_off_lights:
-                baseName = "LightOff";
+                return "LightOff";
             case turn_on_fan:
-                baseName = "FanOn";
+                return "FanOn";
             case turn_off_fan:
-                baseName = "FanOff";
+                return "FanOff";
             case increase_fan_speed:
-                baseName = "IncreaseFanSpeed";
+                return "IncreaseFanSpeed";
             case decrease_fan_speed:
-                baseName = "DecreaseFanSpeed";
+                return "DecreaseFanSpeed";
             case set_thermostat_to_specified_temperature:
-                baseName = "SetThermo";
+                return "SetThermo";
             // all the numbers are just their name
             default:
-                baseName = name;
+                return name;
         }
-        return baseName + ".mp4";
+    }
+
+    public String videoName()
+    {
+        return gestureEndpoint() + ".mp4";
     }
 }
