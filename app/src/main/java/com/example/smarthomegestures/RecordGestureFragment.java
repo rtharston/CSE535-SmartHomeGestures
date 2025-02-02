@@ -29,7 +29,7 @@ public class RecordGestureFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-         binding.buttonRecordGesture.setOnClickListener(v ->
+         binding.videoCaptureButton.setOnClickListener(v ->
              Log.d("buttonRecordGesture", "Record gesture")
             // TODO: save recording
          );
