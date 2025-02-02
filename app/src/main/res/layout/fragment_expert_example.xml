@@ -32,7 +32,7 @@
 
     <Button
         android:id="@+id/button_replay"
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="@string/replay"
@@ -42,7 +42,7 @@
 
     <Button
         android:id="@+id/button_practice"
-        android:layout_width="wrap_content"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="@string/practice"
