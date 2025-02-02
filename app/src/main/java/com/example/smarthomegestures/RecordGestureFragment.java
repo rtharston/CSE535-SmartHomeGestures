@@ -12,10 +12,15 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.smarthomegestures.databinding.FragmentRecordGestureBinding;
+import com.google.common.util.concurrent.ListenableFuture;
 
 public class RecordGestureFragment extends Fragment {
 
@@ -67,6 +72,24 @@ public class RecordGestureFragment extends Fragment {
     }
 
     private void startCamera() {
+        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
+
+        cameraProviderFuture.addListener(() -> {
+            try {
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+
+                Preview preview = new Preview.Builder().build();
+                preview.setSurfaceProvider(binding.viewFinder.getSurfaceProvider());
+
+                CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+
+                cameraProvider.unbindAll();
+
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview);
+            } catch (Exception e) {
+                Log.e("startCamera", "Use case binding failed", e);
+            }
+        }, ContextCompat.getMainExecutor(getContext()));
     }
 
     @Override
