@@ -1,10 +1,8 @@
 package com.example.smarthomegestures;
 
-import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.Manifest;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.video.MediaStoreOutputOptions;
+import androidx.camera.video.FileOutputOptions;
 import androidx.camera.video.Quality;
 import androidx.camera.video.QualitySelector;
 import androidx.camera.video.Recorder;
@@ -233,21 +231,15 @@ public class RecordGestureFragment extends Fragment {
 
         final String name = optionalGesture.get().videoName();
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
-        // What does this one do? Do I want this path?
-        contentValues.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/CameraX-Video");
-
-        // TODO: change to a temp path that I can copy from to the server then remove the original
-        MediaStoreOutputOptions mediaOptions = new MediaStoreOutputOptions
-                .Builder(getActivity().getContentResolver(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+        try {
+            final File file = File.createTempFile(name, ".mp4", getActivity().getCacheDir());
+            FileOutputOptions options = new FileOutputOptions
+                .Builder(file)
                 .setDurationLimitMillis(5000)
-                .setContentValues(contentValues)
                 .build();
 
-        recording = videoCapture.getOutput()
-                .prepareRecording(getContext(), mediaOptions)
+            recording = videoCapture.getOutput()
+                .prepareRecording(getContext(), options)
                 .start(ContextCompat.getMainExecutor(getContext()), recordEvent -> {
                     if (recordEvent instanceof VideoRecordEvent.Start) {
                         Log.d("videoStart", "start recording");
@@ -266,13 +258,15 @@ public class RecordGestureFragment extends Fragment {
                             final String message = "Video capture succeeded: " + finalize.getOutputResults().getOutputUri();
                             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                             Log.d("videoFinalize", message);
-                            final File savedFile = new File(finalize.getOutputResults().getOutputUri().getPath());
-                            uploadVideo(savedFile);
+                            uploadVideo(file);
                         }
                         binding.videoCaptureButton.setText(R.string.start_capture);
                         binding.videoCaptureButton.setEnabled(true);
                     }
                 });
+        } catch (IOException e) {
+            Log.e("videoCapture", "Failed to create file to save video: " + e);
+        }
     }
 
     @Override
