@@ -38,6 +38,7 @@ import java.util.concurrent.Executors;
 public class RecordGestureFragment extends Fragment {
 
     private FragmentRecordGestureBinding binding;
+    private ProcessCameraProvider cameraProvider;
     private GestureSelectionViewModel viewModel;
     private VideoCapture<Recorder> videoCapture;
     private Recording recording;
@@ -95,7 +96,7 @@ public class RecordGestureFragment extends Fragment {
 
         cameraProviderFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                cameraProvider = cameraProviderFuture.get();
 
                 Preview preview = new Preview.Builder().build();
                 preview.setSurfaceProvider(binding.viewFinder.getSurfaceProvider());
@@ -181,9 +182,16 @@ public class RecordGestureFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
         videoCapture = null;
-        recording = null;
+        if (recording != null) {
+            recording.stop();
+            recording = null;
+        }
+        if (cameraProvider != null) {
+            cameraProvider.unbindAll();
+            cameraProvider = null;
+        }
+        binding = null;
     }
 
 }
