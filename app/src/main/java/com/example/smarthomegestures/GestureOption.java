@@ -75,4 +75,29 @@ public enum GestureOption {
                 return R.raw.example_0;
         }
     }
+
+    public String videoName()
+    {
+        String baseName;
+        switch (this) {
+            case turn_on_lights:
+                baseName = "LightOn";
+            case turn_off_lights:
+                baseName = "LightOff";
+            case turn_on_fan:
+                baseName = "FanOn";
+            case turn_off_fan:
+                baseName = "FanOff";
+            case increase_fan_speed:
+                baseName = "IncreaseFanSpeed";
+            case decrease_fan_speed:
+                baseName = "DecreaseFanSpeed";
+            case set_thermostat_to_specified_temperature:
+                baseName = "SetThermo";
+            // all the numbers are just their name
+            default:
+                baseName = name;
+        }
+        return baseName + ".mp4";
+    }
 }
