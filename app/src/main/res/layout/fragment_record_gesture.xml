@@ -7,7 +7,12 @@
     android:padding="16dp"
     tools:context=".RecordGestureFragment">
 
-   <androidx.camera.view.PreviewView
+   <!-- <androidx.camera.view.PreviewView
+       android:id="@+id/viewFinder"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent" /> -->
+   <TextView
+        android:text="nothing"
        android:id="@+id/viewFinder"
        android:layout_width="match_parent"
        android:layout_height="match_parent" />

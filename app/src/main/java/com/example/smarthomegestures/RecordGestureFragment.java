@@ -33,8 +33,12 @@ import androidx.preference.PreferenceManager;
 import com.example.smarthomegestures.databinding.FragmentRecordGestureBinding;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Optional;
-import java.util.concurrent.Executors;
 
 public class RecordGestureFragment extends Fragment {
 
@@ -44,16 +48,18 @@ public class RecordGestureFragment extends Fragment {
     private VideoCapture<Recorder> videoCapture;
     private Recording recording;
 
-    private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    startCamera();
-                } else {
-                    Toast.makeText(getContext(),
-                            "Permissions denied. You can't record without camera permissions.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+    private Integer connectionCount = 0;
+
+//    private final ActivityResultLauncher<String> requestPermissionLauncher =
+//            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+//                if (isGranted) {
+//                    startCamera();
+//                } else {
+//                    Toast.makeText(getContext(),
+//                            "Permissions denied. You can't record without camera permissions.",
+//                            Toast.LENGTH_SHORT).show();
+//                }
+//            });
 
     @Override
     public View onCreateView(
@@ -74,48 +80,79 @@ public class RecordGestureFragment extends Fragment {
         // TODO: add an 'upload' action after the recording is done
         binding.videoCaptureButton.setOnClickListener(v -> {
             Log.d("buttonRecordGesture", "Record gesture");
-            captureVideo();
+            uploadVideo();
+//            captureVideo();
         });
 
-        if (checkPermissions()) {
-            startCamera();
-        } else {
-            requestPermissions();
-        }
+//        if (checkPermissions()) {
+//            startCamera();
+//        } else {
+//            requestPermissions();
+//        }
     }
 
-    private boolean checkPermissions() {
-        return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-    }
+//    private boolean checkPermissions() {
+//        return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+//    }
+//
+//    private void requestPermissions() {
+//        requestPermissionLauncher.launch(Manifest.permission.CAMERA);
+//    }
 
-    private void requestPermissions() {
-        requestPermissionLauncher.launch(Manifest.permission.CAMERA);
-    }
+//    private void startCamera() {
+//        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
+//
+//        cameraProviderFuture.addListener(() -> {
+//            try {
+//                cameraProvider = cameraProviderFuture.get();
+//
+//                Preview preview = new Preview.Builder().build();
+//                preview.setSurfaceProvider(binding.viewFinder.getSurfaceProvider());
+//
+//                Recorder recorder = new Recorder.Builder()
+//                        .setQualitySelector(QualitySelector.from(Quality.HIGHEST))
+//                        .build();
+//                videoCapture = VideoCapture.withOutput(recorder);
+//
+//                CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+//
+//                cameraProvider.unbindAll();
+//
+//                cameraProvider.bindToLifecycle(this, cameraSelector, preview, videoCapture);
+//            } catch (Exception e) {
+//                Log.e("startCamera", "Use case binding failed", e);
+//            }
+//        }, ContextCompat.getMainExecutor(getContext()));
+//    }
 
-    private void startCamera() {
-        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
-
-        cameraProviderFuture.addListener(() -> {
+    private void uploadVideo() {
+        Log.d("uploadVideo", "start upload");
+        new Thread(() -> {
             try {
-                cameraProvider = cameraProviderFuture.get();
+                String ipAddress = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("server_address", "127.0.0.1");
+                URL serverUrl = new URL("http://" + ipAddress + ":50001/");
+                HttpURLConnection connection = (HttpURLConnection) serverUrl.openConnection();
+                StringBuilder result = new StringBuilder();
+                Log.d("uploadVideo", "created connection");
 
-                Preview preview = new Preview.Builder().build();
-                preview.setSurfaceProvider(binding.viewFinder.getSurfaceProvider());
+                connection.setRequestMethod("GET");
 
-                Recorder recorder = new Recorder.Builder()
-                        .setQualitySelector(QualitySelector.from(Quality.HIGHEST))
-                        .build();
-                videoCapture = VideoCapture.withOutput(recorder);
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line = br.readLine();
+                while (line != null) {
+                    result.append(line);
+                    line = br.readLine();
+                }
 
-                CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-
-                cameraProvider.unbindAll();
-
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview, videoCapture);
-            } catch (Exception e) {
-                Log.e("startCamera", "Use case binding failed", e);
+                connectionCount += 1;
+                String msg = "after connection: " + connectionCount;
+                Log.d("uploadVideo", msg + "\n" + result);
+                binding.viewFinder.setText(msg);
+                connection.disconnect();
+            } catch (IOException e) {
+                Log.e("uploadVideo", "exception while uploading: " + e);
             }
-        }, ContextCompat.getMainExecutor(getContext()));
+        }).start();
     }
 
     private void captureVideo() {
@@ -172,7 +209,7 @@ public class RecordGestureFragment extends Fragment {
                             final String message = "Video capture succeeded: " + finalize.getOutputResults().getOutputUri();
                             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                             Log.d("videoFinalize", message);
-                            // TODO: enable button to Upload to server
+                            uploadVideo();
                         }
                         binding.videoCaptureButton.setText(R.string.start_capture);
                         binding.videoCaptureButton.setEnabled(true);
