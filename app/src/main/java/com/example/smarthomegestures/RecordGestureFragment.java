@@ -147,7 +147,7 @@ public class RecordGestureFragment extends Fragment {
         // TODO: change to a temp path that I can copy from to the server then remove the original
         MediaStoreOutputOptions mediaOptions = new MediaStoreOutputOptions
                 .Builder(getActivity().getContentResolver(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-//                .setDurationLimitMillis(5000)
+                .setDurationLimitMillis(5000)
                 .setContentValues(contentValues)
                 .build();
 
@@ -161,7 +161,7 @@ public class RecordGestureFragment extends Fragment {
                     }
                     else if (recordEvent instanceof VideoRecordEvent.Finalize) {
                         final VideoRecordEvent.Finalize finalize = (VideoRecordEvent.Finalize) recordEvent;
-                        if (finalize.hasError()) {
+                        if (finalize.hasError() && finalize.getError() != VideoRecordEvent.Finalize.ERROR_DURATION_LIMIT_REACHED) {
                             if (recording != null) {
                                 recording.close();
                                 recording = null;
