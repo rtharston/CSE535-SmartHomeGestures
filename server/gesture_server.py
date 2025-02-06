@@ -1,4 +1,5 @@
 import os
+import datetime
 
 from flask import Flask, request, abort, send_file
 from markupsafe import escape
@@ -49,23 +50,23 @@ def get_example_video(gesture):
     return send_file(os.path.join(app.config["EXAMPLES_FOLDER"], f'{gesture}_example.mp4'))
 
 
-def get_video_count(gesture):
-    count = 0
-    for f in os.listdir(app.config["UPLOADS_FOLDER"]):
+def get_latest_video(gesture):
+    # I'm assuming that the ISO 8601 timestamp always sorts in order, as it should do, 
+    # so the first found in reverse sort is the newest
+    for f in sorted(os.listdir(app.config["UPLOADS_FOLDER"]), reverse=True):
         if f.startswith(gesture):
-            count += 1
-    return count
+            return f
 
 @app.get('/uploads/<gesture>')
 def get_uploaded_video(gesture):
     validate_gesture(gesture)
     # TODO: add a endpoint to get the number of copies of this video so the user can pick one; for now just show the latest
-    num = get_video_count(gesture) - 1
-    p = os.path.join(app.config["UPLOADS_FOLDER"], f'{gesture}_user_{num}.mp4')
-    if os.path.exists(p):
-        return send_file(p)
-    else:
-        return f'no uploads of {gesture} found', 404
+    if video_name := get_latest_video(gesture):
+        p = os.path.join(app.config["UPLOADS_FOLDER"], video_name)
+        if os.path.exists(p):
+            return send_file(p)
+    
+    return f'no uploads of {gesture} found', 404
 
 
 @app.post('/upload/<gesture>')
@@ -80,8 +81,8 @@ def upload_video(gesture):
     if f:
         if os.path.splitext(f.filename)[-1].lower() != '.mp4':
             return f'only mp4 files supported: {f.filename}', 415
-        num = get_video_count(gesture)
-        f.save(os.path.join(app.config["UPLOADS_FOLDER"], f'{gesture}_user_{num}.mp4'))
+        timestamp = datetime.datetime.now().replace(microsecond=0).isoformat().replace(":", "")
+        f.save(os.path.join(app.config["UPLOADS_FOLDER"], f'{gesture}_user_{timestamp}.mp4'))
         return f'Saved video for {escape(gesture)}'
     else:
         return f'Missing video file for {escape(gesture)}'
