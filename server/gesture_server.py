@@ -49,12 +49,18 @@ def get_example_video(gesture):
     return send_file(os.path.join(app.config["EXAMPLES_FOLDER"], f'{gesture}_example.mp4'))
 
 
+def get_video_count(gesture):
+    count = 0
+    for f in os.listdir(app.config["UPLOADS_FOLDER"]):
+        if f.startswith(gesture):
+            count += 1
+    return count
+
 @app.get('/uploads/<gesture>')
 def get_uploaded_video(gesture):
     validate_gesture(gesture)
-    # TODO: add a endpoint to get the number of copies of this video so the user can pick one
-    # TODO: first though just figure out which was the latest and return that one instead of the first
-    num = 0
+    # TODO: add a endpoint to get the number of copies of this video so the user can pick one; for now just show the latest
+    num = get_video_count(gesture) - 1
     p = os.path.join(app.config["UPLOADS_FOLDER"], f'{gesture}_user_{num}.mp4')
     if os.path.exists(p):
         return send_file(p)
@@ -74,8 +80,7 @@ def upload_video(gesture):
     if f:
         if os.path.splitext(f.filename)[-1].lower() != '.mp4':
             return f'only mp4 files supported: {f.filename}', 415
-        # TODO: get count of existing videos and increment num
-        num = 0
+        num = get_video_count(gesture)
         f.save(os.path.join(app.config["UPLOADS_FOLDER"], f'{gesture}_user_{num}.mp4'))
         return f'Saved video for {escape(gesture)}'
     else:
