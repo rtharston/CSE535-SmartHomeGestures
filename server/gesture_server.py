@@ -49,7 +49,7 @@ def get_example_video(gesture):
     return send_file(os.path.join(app.config["EXAMPLES_FOLDER"], f'{gesture}_example.mp4'))
 
 
-@app.get('/review/<gesture>')
+@app.get('/uploads/<gesture>')
 def get_uploaded_video(gesture):
     validate_gesture(gesture)
     # TODO: add a endpoint to get the number of copies of this video so the user can pick one
@@ -65,8 +65,10 @@ def get_uploaded_video(gesture):
 @app.post('/upload/<gesture>')
 def upload_video(gesture):
     validate_gesture(gesture)
+    print(f"validated {gesture} for upload")
     # save a video for this gesture
     if 'video' not in request.files:
+        print('video not in request')
         return 400
     f = request.files['video']
     if f:
