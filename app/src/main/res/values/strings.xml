@@ -9,9 +9,7 @@
     <string name="see_example">See Example</string>
     <string name="replay">Replay</string>
     <string name="practice">Practice</string>
-    <string name="retry_recording">Retry</string>
     <string name="start_capture">Record</string>
-    <!-- Will I need this one? -->
     <string name="stop_capture">Stop</string>
     <string name="upload_recording">Upload</string>
     <string name="title_activity_settings">SettingsActivity</string>

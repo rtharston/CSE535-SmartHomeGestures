@@ -48,6 +48,7 @@ public class RecordGestureFragment extends Fragment {
     private GestureSelectionViewModel viewModel;
     private VideoCapture<Recorder> videoCapture;
     private Recording recording;
+    private File recordedFile;
 
     private final String lineEnd = "\r\n";
     private final String twoHyphens = "--";
@@ -80,7 +81,11 @@ public class RecordGestureFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(GestureSelectionViewModel.class);
 
-        // TODO: add an 'upload' action after the recording is done
+        binding.uploadRecordingButton.setEnabled(false);
+        binding.uploadRecordingButton.setOnClickListener(v -> {
+            Log.d("buttonUploadVideo", "Upload button pressed");
+            uploadVideo();
+        });
         binding.videoCaptureButton.setOnClickListener(v -> {
             Log.d("buttonRecordGesture", "Record gesture");
             captureVideo();
@@ -127,7 +132,7 @@ public class RecordGestureFragment extends Fragment {
         }, ContextCompat.getMainExecutor(getContext()));
     }
 
-    private void uploadVideo(final File file) {
+    private void uploadVideo() {
         Optional<GestureOption> optionalGesture = viewModel.getSelectedGestureOption().getValue();
         if (optionalGesture.isEmpty())
         {
@@ -136,7 +141,7 @@ public class RecordGestureFragment extends Fragment {
 
         final String endpoint = optionalGesture.get().gestureEndpoint();
 
-        if (file == null || !file.exists()) {
+        if (recordedFile == null || !recordedFile.exists()) {
             Log.d("uploadVideo", "file does NOT exist");
             return;
         }
@@ -154,17 +159,17 @@ public class RecordGestureFragment extends Fragment {
                 connection.setRequestProperty("Connection", "Keep-Alive");
                 connection.setRequestProperty("ENCTYPE", "multipart/form-data");
                 connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                connection.setRequestProperty("file", file.getName());
+                connection.setRequestProperty("file", recordedFile.getName());
 
                 DataOutputStream outputPost = new DataOutputStream(connection.getOutputStream());
                 outputPost.writeBytes(twoHyphens + boundary + lineEnd);
 
                 outputPost.writeBytes("Content-Disposition: form-data; name=\"" +
                         "video" + "\";filename=\"" +
-                        file.getName() + "\"" + lineEnd);
+                        recordedFile.getName() + "\"" + lineEnd);
                 outputPost.writeBytes(lineEnd);
 
-                Files.copy(file.toPath(), outputPost);
+                Files.copy(recordedFile.toPath(), outputPost);
 
                 outputPost.writeBytes(lineEnd);
                 outputPost.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
@@ -195,6 +200,9 @@ public class RecordGestureFragment extends Fragment {
 
                         Toast.makeText(getContext(), "File Upload Complete.",
                                 Toast.LENGTH_SHORT).show();
+
+                        recordedFile = null;
+                        binding.uploadRecordingButton.setEnabled(false);
                     });
                 }
 
@@ -258,7 +266,8 @@ public class RecordGestureFragment extends Fragment {
                             final String message = "Video capture succeeded: " + finalize.getOutputResults().getOutputUri();
                             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                             Log.d("videoFinalize", message);
-                            uploadVideo(file);
+                            recordedFile = file;
+                            binding.uploadRecordingButton.setEnabled(true);
                         }
                         binding.videoCaptureButton.setText(R.string.start_capture);
                         binding.videoCaptureButton.setEnabled(true);
