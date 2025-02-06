@@ -14,4 +14,11 @@
     <!-- Will I need this one? -->
     <string name="stop_capture">Stop</string>
     <string name="upload_recording">Upload</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="server_header">Server</string>
+
+    <!-- Server Preferences -->
+    <string name="server_title">IPv4 Address for server</string>
 </resources>
