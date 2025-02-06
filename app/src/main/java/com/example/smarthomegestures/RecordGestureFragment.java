@@ -264,7 +264,7 @@ public class RecordGestureFragment extends Fragment {
                             Log.e("videoFinalize", "Video capture ended with error: " + finalize.getError());
                         } else {
                             final String message = "Video capture succeeded: " + finalize.getOutputResults().getOutputUri();
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                             Log.d("videoFinalize", message);
                             recordedFile = file;
                             binding.uploadRecordingButton.setEnabled(true);
