@@ -263,6 +263,11 @@ public class RecordGestureFragment extends Fragment {
                             }
                             Log.e("videoFinalize", "Video capture ended with error: " + finalize.getError());
                         } else {
+                            if (finalize.getError() == VideoRecordEvent.Finalize.ERROR_DURATION_LIMIT_REACHED)
+                            {
+                                Toast.makeText(getContext(), "5 second limit reached.", Toast.LENGTH_SHORT).show();
+                            }
+
                             final String message = "Video capture succeeded: " + finalize.getOutputResults().getOutputUri();
 //                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                             Log.d("videoFinalize", message);
